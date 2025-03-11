@@ -276,7 +276,7 @@ class BM1362:
         print("\033[32m")
         print("Request hashrate")
         print("\033[0m")
-        self.send(TYPE_CMD | GROUP_ALL | CMD_READ, [0x04])
+        self.send(TYPE_CMD | GROUP_ALL | CMD_READ, [0x00, 0x04])
 
     def send_hash_frequency2(self, id, target_freq, max_diff = 0.001):
         freqbuf = bytearray([0x00, 0x08, 0x40, 0xA0, 0x02, 0x41])  # freqbuf - pll0_parameter

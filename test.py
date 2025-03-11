@@ -34,8 +34,8 @@ def _serial_tx_func(data):
             if sent == 0:
                 raise RuntimeError("Serial connection broken")
             total_sent += sent
-        if debug:
-            logging.debug("-> %s", bytearray(data).hex())
+        # if debug:
+        logging.debug("-> %s", bytearray(data).hex())
 
 def _serial_rx_func(size, timeout_ms):
     serial_port.timeout = timeout_ms / 1000.0
@@ -43,7 +43,7 @@ def _serial_rx_func(size, timeout_ms):
     data = serial_port.read(size)
     bytes_read = len(data)
 
-    if debug and bytes_read > 0:
+    if bytes_read > 0:
         logging.debug("serial_rx: %d", bytes_read)
         logging.debug("<- %s", data.hex())
 
@@ -100,6 +100,7 @@ def main():
 
     print(chip_counter)
 
+    print('Requesting hash rate')
     for id in range(0, chip_counter):
         asics.request_hashrate(id * 2)
 

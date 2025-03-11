@@ -144,7 +144,7 @@ def main():
 
     logging.info('Requesting hash rate')
     # for id in range(0, chip_counter):
-    logging.info(f'Request hashrate from chip {id * 2}')
+    logging.info(f'Request hashrate from chip {8 * 2}')
     asics.request_hashrate(8 * 2)
 
     while True:

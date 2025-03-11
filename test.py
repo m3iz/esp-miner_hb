@@ -134,6 +134,27 @@ def main():
     GPIO.output(nrst_pin, GPIO.LOW)
 
 
+
+def setup_logging(log_level, log_filename):
+    # Create a logger
+    logger = logging.getLogger()
+    logger.setLevel(log_level)
+
+    # Create a formatter
+    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+
+    # Create a handler for logging to the console
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(formatter)
+    logger.addHandler(console_handler)
+
+    # If a log filename is provided, also log to a file
+    if log_filename:
+        file_handler = logging.FileHandler(log_filename, mode='w')
+        file_handler.setFormatter(formatter)
+        logger.addHandler(file_handler)
+
+
 def sigint_handler(signal_received=None, frame=None):
     print('SIGINT (Ctrl+C) captured, exiting gracefully')
     GPIO.output(sdn_pin, GPIO.LOW)
@@ -141,5 +162,9 @@ def sigint_handler(signal_received=None, frame=None):
     os._exit(0)
 
 if __name__ == '__main__':
+
+    log_level = logging.DEBUG
+
+    setup_logging(log_level, None)
     atexit.register(sigint_handler)
     main()

@@ -214,6 +214,9 @@ class BM1362:
     def request_hashrate(self, chipAddr):
         self.send(TYPE_CMD | GROUP_SINGLE | CMD_READHASHRATE, [chipAddr, 0x00])
 
+    def request_hashrate_all(self):
+        self.send(TYPE_CMD | GROUP_ALL | CMD_READHASHRATE, [0x00, 0x00])
+
     def send_hash_frequency2(self, id, target_freq, max_diff = 0.001):
         freqbuf = bytearray([0x00, 0x08, 0x40, 0xA0, 0x02, 0x41])  # freqbuf - pll0_parameter
         postdiv_min = 255

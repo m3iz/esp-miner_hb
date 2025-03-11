@@ -95,7 +95,7 @@ class HashRateResponse:
         self.smth2 = 0 # B
         self.smth3 = 0 # B
         self.chip_address = 0 # B
-        self.chip_address2 = 0 # B
+        self.register_address = 0 # B
         self.value1 = 0 # B
         self.value2 = 0 # B
         self.value3 = 0 # B
@@ -115,7 +115,7 @@ class HashRateResponse:
         result.smth2 = unpacked_data[3] #I
         result.smth3 = unpacked_data[4] #I
         result.chip_address = unpacked_data[5] #B
-        result.chip_address2 = unpacked_data[6] #B
+        result.register_address = unpacked_data[6] #B
         result.value1 = unpacked_data[7] #B
         result.value2 = unpacked_data[8] #B
         result.value3 = unpacked_data[9] #B
@@ -123,6 +123,7 @@ class HashRateResponse:
 
         return result
 # aa55 13 62 03 0c 0c 00 00 00 0f
+# aa55 00 00 00 22 06 04 00 00 1b
 # 2B   B  B  B  B  B  B  B  B  B
 # 01   2  3  4  5  6  7  8  9  10
     def print(self):
@@ -133,7 +134,7 @@ class HashRateResponse:
         print(f"  smth2:           {self.smth2}")
         print(f"  smth3:           {self.smth3}")
         print(f"  chip_address:    {self.chip_address}")
-        print(f"  chip_address2:    {self.chip_address2}")
+        print(f"  register_address:    {self.register_address}")
         print(f"  value1:          {self.value1}")
         print(f"  value2:          {self.value2}")
         print(f"  value3:          {self.value3}")
@@ -269,7 +270,7 @@ class BM1362:
         self.send(TYPE_CMD | GROUP_SINGLE | CMD_SETADDRESS, [chipAddr, 0x00])
 
     def request_hashrate(self, chipAddr):
-        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x00])
+        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x04])
 
     def request_hashrate_all(self):
 

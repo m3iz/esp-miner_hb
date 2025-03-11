@@ -67,6 +67,8 @@ def main():
     print('Wait for init')
     time.sleep(3)
 
+    print('Initing chips')
+
     asics = BM1362()
 
     asics.ll_init(
@@ -79,6 +81,7 @@ def main():
 
     # currently the qaxe+ needs this loop :see-no-evil:
     for attempt in range(max_retries):
+        print(f'Counting chips. Attempt {attempt}')
         try:
             chip_counter = asics.init(chip_frequency, chip_count, None)
             print("Initialization successful.")

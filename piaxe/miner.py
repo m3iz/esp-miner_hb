@@ -480,6 +480,12 @@ class BM1366Miner:
                 #if self.debug_bm1366:
                 #    logging.debug("<- %s", bytes(data).hex())
 
+                try:
+                    hashrate_response = bm1362.HashRateResponse().from_bytes(bytes(data))
+                    hashrate_response.print()
+                except:
+                    pass
+
                 asic_result = bm1362.AsicResult().from_bytes(bytes(data))
                 if not asic_result or not asic_result.nonce:
                     continue
@@ -579,6 +585,8 @@ class BM1366Miner:
                         # don't add to shares if it's invalid or it's a duplicate
                         if is_valid and not duplicate:
                             self.shares.append((1, difficulty, time.time()))
+
+                        self.asics.request_hashrate_all()
 
                         self.hash_rate(30)
                         self.stats.hashing_speed = self.hash_rate()

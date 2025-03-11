@@ -66,12 +66,12 @@ class AsicResult:
         result = cls()
 
         # Assign the unpacked data to the class fields.
-        result.preamble = list(unpacked_data[0:2])
-        result.nonce = unpacked_data[2]
-        result.midstate_num = unpacked_data[3]
-        result.job_id = unpacked_data[4]
-        result.version = unpacked_data[5]
-        result.crc = unpacked_data[6]
+        result.preamble = list(unpacked_data[0:2]) #2B
+        result.nonce = unpacked_data[2] #I
+        result.midstate_num = unpacked_data[3] #B
+        result.job_id = unpacked_data[4] #B
+        result.version = unpacked_data[5] #H
+        result.crc = unpacked_data[6] #B
 
         return result
 
@@ -83,6 +83,62 @@ class AsicResult:
         print(f"  job_id:          {self.job_id:02x}")
         print(f"  version:         {self.version:04x}")
         print(f"  crc:             {self.crc:02x}")
+
+class HashRateResponse:
+    # Define the struct format corresponding to the C structure.
+    # < for little-endian, B for uint8_t, I for uint32_t, H for uint16_t
+    _struct_format = '<2BBBBBBBBBB'
+
+    def __init__(self):
+        self.preamble = [0x00, 0x00] # 2B
+        self.smth1 = 0 # B
+        self.smth2 = 0 # B
+        self.smth3 = 0 # B
+        self.chip_address = 0 # B
+        self.chip_address2 = 0 # B
+        self.value1 = 0 # B
+        self.value2 = 0 # B
+        self.value3 = 0 # B
+        self.crc = 0 # B
+
+    @classmethod
+    def from_bytes(cls, data):
+        # Unpack the data using the struct format.
+        unpacked_data = struct.unpack(cls._struct_format, data)
+
+        # Create an instance of the AsicResult class.
+        result = cls()
+
+        # Assign the unpacked data to the class fields.
+        result.preamble = list(unpacked_data[0:2]) #2B
+        result.smth1 = unpacked_data[2] #I
+        result.smth2 = unpacked_data[3] #I
+        result.smth3 = unpacked_data[4] #I
+        result.chip_address = unpacked_data[5] #B
+        result.chip_address2 = unpacked_data[6] #B
+        result.value1 = unpacked_data[7] #B
+        result.value2 = unpacked_data[8] #B
+        result.value3 = unpacked_data[9] #B
+        result.crc = unpacked_data[10] #B
+
+        return result
+# aa55 13 62 03 0c 0c 00 00 00 0f
+# 2B   B  B  B  B  B  B  B  B  B
+# 01   2  3  4  5  6  7  8  9  10
+    def print(self):
+        print("\033[32m")
+        print("HashRateResponse:")
+        print(f"  preamble:        {self.preamble}")
+        print(f"  smth1:           {self.smth1}")
+        print(f"  smth2:           {self.smth2}")
+        print(f"  smth3:           {self.smth3}")
+        print(f"  chip_address:    {self.chip_address}")
+        print(f"  chip_address2:    {self.chip_address2}")
+        print(f"  value1:          {self.value1}")
+        print(f"  value2:          {self.value2}")
+        print(f"  value3:          {self.value3}")
+        print(f"  crc:             {self.crc:02x}")
+        print("\033[0m")
 
 class WorkRequest:
     def __init__(self):

@@ -94,11 +94,11 @@ class HashRateResponse:
         self.smth1 = 0 # B
         self.smth2 = 0 # B
         self.smth3 = 0 # B
+        self.smth4 = 0 # B
         self.chip_address = 0 # B
         self.register_address = 0 # B
         self.value1 = 0 # B
         self.value2 = 0 # B
-        self.value3 = 0 # B
         self.crc = 0 # B
 
     @classmethod
@@ -114,11 +114,11 @@ class HashRateResponse:
         result.smth1 = unpacked_data[2] #I
         result.smth2 = unpacked_data[3] #I
         result.smth3 = unpacked_data[4] #I
-        result.chip_address = unpacked_data[5] #B
-        result.register_address = unpacked_data[6] #B
-        result.value1 = unpacked_data[7] #B
-        result.value2 = unpacked_data[8] #B
-        result.value3 = unpacked_data[9] #B
+        result.smth4 = unpacked_data[5] #I
+        result.chip_address = unpacked_data[6] #B
+        result.register_address = unpacked_data[7] #B
+        result.value1 = unpacked_data[8] #B
+        result.value2 = unpacked_data[9] #B
         result.crc = unpacked_data[10] #B
 
         return result
@@ -133,11 +133,11 @@ class HashRateResponse:
         print(f"  smth1:           {self.smth1}")
         print(f"  smth2:           {self.smth2}")
         print(f"  smth3:           {self.smth3}")
+        print(f"  smth4:           {self.smth4}")
         print(f"  chip_address:    {self.chip_address}")
         print(f"  register_address:    {self.register_address}")
         print(f"  value1:          {self.value1}")
         print(f"  value2:          {self.value2}")
-        print(f"  value3:          {self.value3}")
         print(f"  crc:             {self.crc:02x}")
         print("\033[0m")
 

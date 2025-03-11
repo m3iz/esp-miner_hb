@@ -482,7 +482,7 @@ class BM1366Miner:
 
                 try:
                     hashrate_response = bm1362.HashRateResponse().from_bytes(bytes(data))
-                    hashrate_response.print()
+                    # hashrate_response.print()
                 except:
                     pass
 

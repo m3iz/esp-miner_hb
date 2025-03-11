@@ -272,6 +272,10 @@ class BM1362:
         self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x00])
 
     def request_hashrate_all(self):
+
+        print("\033[32m")
+        print("Request hashrate")
+        print("\033[0m")
         self.send(TYPE_CMD | GROUP_ALL | CMD_READ, [0x04, 0x00])
 
     def send_hash_frequency2(self, id, target_freq, max_diff = 0.001):

@@ -99,6 +99,7 @@ class BM1366Miner:
         self.debug_bm1366 = self.config.get("debug_bm1366", False)
 
     def shutdown(self):
+        print('miner shutdown')
         # signal the threads to end
         self.stop_event.set()
 
@@ -184,6 +185,9 @@ class BM1366Miner:
 
         self.set_difficulty(512)
         self.extranonce2_interval = self.config[self.miner]["extranonce2_interval"]
+
+        self.temp_thread = threading.Thread(target=self._monitor_hash_rate)
+        self.temp_thread.start()
 
         self.temp_thread = threading.Thread(target=self._monitor_temperature)
         self.temp_thread.start()
@@ -346,6 +350,13 @@ class BM1366Miner:
 
             time.sleep(1.5)
 
+    def _monitor_hash_rate(self):
+        while not self.stop_event.is_set():
+            self.hash_rate(60)
+            self.hash_rate(300)
+            self.hash_rate(600)
+            time.sleep(15)
+
     def _serial_tx_func(self, data):
         with self.serial_lock:
             total_sent = 0
@@ -417,7 +428,7 @@ class BM1366Miner:
 
         # Convert hash rate to GH/s
         hash_rate_ghps = hash_rate_hps / 1e9
-        logging.debug("\033[32mhash rate: %f GH/s\033[0m", hash_rate_ghps)
+        logging.debug("\033[32mhash rate (%d): %f GH/s\033[0m", time_period, hash_rate_ghps)
         return hash_rate_ghps
 
     def _set_target(self, target):
@@ -569,6 +580,7 @@ class BM1366Miner:
                         if is_valid and not duplicate:
                             self.shares.append((1, difficulty, time.time()))
 
+                        self.hash_rate(30)
                         self.stats.hashing_speed = self.hash_rate()
                         hash_difficulty = shared.calculate_difficulty_from_hash(hash)
                         self.stats.best_difficulty = max(self.stats.best_difficulty, hash_difficulty)

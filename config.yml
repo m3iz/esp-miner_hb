@@ -5,6 +5,15 @@ miner: emberone
 # maybe doesn't work with all pools
 suggest_difficulty: 2048
 
+emberone:
+  name: Heatbit
+  chips: 48
+  asic_frequency: 300
+  nrst_pin: 15
+  sdn_pin: 11
+  extranonce2_interval: 1.5
+  serial_port_asic: "/dev/ttyUSB0"
+
 piaxe:
   name: PiAxe
   chips: 1
@@ -26,7 +35,7 @@ bitcrane:
   extranonce2_interval: 1.5
   fan_speed: 0.25
 
-emberone:
+___emberone___:
   name: emberOne/00
   chips: 12
   asic_frequency: 300

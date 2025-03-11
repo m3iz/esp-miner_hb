@@ -32,6 +32,7 @@ import signal
 import os
 import datetime
 import yaml # type: ignore
+import atexit
 
 # Subscription state
 class Subscription(object):
@@ -464,7 +465,7 @@ def setup_logging(log_level, log_filename):
 # make it accessible to the sigint handler
 pyminer = None
 
-def sigint_handler(signal_received, frame):
+def sigint_handler(signal_received=None, frame=None):
     print('SIGINT (Ctrl+C) captured, exiting gracefully')
     if pyminer is not None:
       pyminer.shutdown()
@@ -552,6 +553,8 @@ if __name__ == '__main__':
     if os.fork() or os.fork(): sys.exit()
 
   signal.signal(signal.SIGINT, sigint_handler)
+  signal.signal(signal.SIGTERM, sigint_handler)
+  atexit.register(sigint_handler)
 
   username_parts = options.username.split(".")
   address = username_parts[0]
@@ -566,8 +569,12 @@ if __name__ == '__main__':
 
   suggest_difficulty = config.get('suggest_difficulty', None)
 
-  piaxeMiner = miner.BM1366Miner(config, address, network)
-  piaxeMiner.init()
+  try:
+      piaxeMiner = miner.BM1366Miner(config, address, network)
+      piaxeMiner.init()
+  except Exception as e:
+      piaxeMiner.hardware.shutdown()
+      raise e
 
   # Heigh-ho, heigh-ho, it's off to work we go...
 

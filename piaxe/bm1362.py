@@ -25,7 +25,8 @@ CMD_SETADDRESS = 0x00
 CMD_WRITE = 0x01
 CMD_READ = 0x02
 CMD_INACTIVE = 0x03
-CMD_READHASHRATE = 0x04
+
+REG_READHASHRATE = 0x04
 
 RESPONSE_CMD = 0x00
 RESPONSE_JOB = 0x80
@@ -212,10 +213,10 @@ class BM1362:
         self.send(TYPE_CMD | GROUP_SINGLE | CMD_SETADDRESS, [chipAddr, 0x00])
 
     def request_hashrate(self, chipAddr):
-        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READHASHRATE, [chipAddr, 0x00])
+        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x00])
 
     def request_hashrate_all(self):
-        self.send(TYPE_CMD | GROUP_ALL | CMD_READHASHRATE, [0x00, 0x00])
+        self.send(TYPE_CMD | GROUP_ALL | CMD_READ, [0x04, 0x00])
 
     def send_hash_frequency2(self, id, target_freq, max_diff = 0.001):
         freqbuf = bytearray([0x00, 0x08, 0x40, 0xA0, 0x02, 0x41])  # freqbuf - pll0_parameter

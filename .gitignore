@@ -2,3 +2,4 @@
 docker/monitoring/data/*
 *.pyc
 
+venv

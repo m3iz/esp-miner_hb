@@ -65,8 +65,10 @@ def _receive_thread():
     mask_nonce = 0x00000000
     mask_version = 0x00000000
 
+    global _buffer, _write_index, _read_index
+
     while True:
-        byte = _serial_rx_func(5, 100)
+        byte = _serial_rx_func(11, 100)
 
         if not byte:
             continue
@@ -78,8 +80,8 @@ def _receive_thread():
             _write_index += 1
 
         if _write_index - _read_index >= 11 and _buffer[_read_index % 64] == 0xaa and _buffer[(_read_index + 1) % 64] == 0x55:
-            data = bytearray([0] * 5)
-            for i in range(0, 5):
+            data = bytearray([0] * 11)
+            for i in range(0, 11):
                 data[i] = _buffer[_read_index % 64]
                 _read_index += 1
 

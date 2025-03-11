@@ -136,7 +136,7 @@ def main():
     receive_thread.start()
 
     logging.info('Requesting hash rate ALL')
-        asics.request_hashrate_all()
+    asics.request_hashrate_all()
 
     logging.info('Requesting hash rate')
     for id in range(0, chip_counter):

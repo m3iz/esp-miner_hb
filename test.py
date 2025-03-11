@@ -1,3 +1,4 @@
+import os
 import threading
 import time
 import serial # type: ignore
@@ -5,6 +6,7 @@ import OPi.GPIO as GPIO
 from orangepi import zero2
 from piaxe.bm1362 import BM1362
 import logging
+import atexit
 
 debug = True
 
@@ -98,8 +100,42 @@ def main():
 
     print(chip_counter)
 
+    for id in range(0, chip_counter):
+        asics.request_hashrate(id * 2)
+
+    _read_index = 0
+    _write_index = 0
+    _buffer = bytearray([0] * 64)
+
+    while True:
+        byte = _serial_rx_func(11, 100)
+
+        if not byte:
+            continue
+
+        for i in range(0, len(byte)):
+            _buffer[_write_index % 64] = byte[i]
+            _write_index += 1
+
+            if _write_index - _read_index >= 11 and _buffer[_read_index % 64] == 0xaa and _buffer[(_read_index + 1) % 64] == 0x55:
+                data = bytearray([0] * 11)
+                for i in range(0, 11):
+                    data[i] = _buffer[_read_index % 64]
+                    _read_index += 1
+
+                print(data)
+            print(_buffer)
+
     GPIO.output(sdn_pin, GPIO.LOW)
     GPIO.output(nrst_pin, GPIO.LOW)
 
+
+def sigint_handler(signal_received=None, frame=None):
+    print('SIGINT (Ctrl+C) captured, exiting gracefully')
+    GPIO.output(sdn_pin, GPIO.LOW)
+    GPIO.output(nrst_pin, GPIO.LOW)
+    os._exit(0)
+
 if __name__ == '__main__':
+    atexit.register(sigint_handler)
     main()

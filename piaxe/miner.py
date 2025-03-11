@@ -352,9 +352,11 @@ class BM1366Miner:
 
     def _monitor_hash_rate(self):
         while not self.stop_event.is_set():
-            self.hash_rate(60)
-            self.hash_rate(300)
-            self.hash_rate(600)
+            # self.hash_rate(60)
+            # self.hash_rate(300)
+            # self.hash_rate(600)
+
+            self.asics.request_hashrate_all()
             time.sleep(15)
 
     def _serial_tx_func(self, data):
@@ -585,8 +587,6 @@ class BM1366Miner:
                         # don't add to shares if it's invalid or it's a duplicate
                         if is_valid and not duplicate:
                             self.shares.append((1, difficulty, time.time()))
-
-                        self.asics.request_hashrate_all()
 
                         self.hash_rate(30)
                         self.stats.hashing_speed = self.hash_rate()

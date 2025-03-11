@@ -270,12 +270,14 @@ class BM1362:
         self.send(TYPE_CMD | GROUP_SINGLE | CMD_SETADDRESS, [chipAddr, 0x00])
 
     def request_hashrate(self, chipAddr):
+        print("\033[32m")
+        print(f"Request hashrate {chipAddr}")
+        print("\033[0m")
         self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x04])
 
     def request_hashrate_all(self):
-
         print("\033[32m")
-        print("Request hashrate")
+        print("Request hashrate all")
         print("\033[0m")
         self.send(TYPE_CMD | GROUP_ALL | CMD_READ, [0x00, 0x04])
 

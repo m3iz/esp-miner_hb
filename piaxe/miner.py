@@ -356,7 +356,7 @@ class BM1366Miner:
             # self.hash_rate(300)
             # self.hash_rate(600)
 
-            self.asics.request_hashrate_all()
+            self.asics.request_hashrate(8 * 2)
             time.sleep(15)
 
     def _serial_tx_func(self, data):

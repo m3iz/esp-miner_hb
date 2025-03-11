@@ -139,13 +139,13 @@ def main():
     receive_thread = threading.Thread(target=_receive_thread)
     receive_thread.start()
 
-    logging.info('Requesting hash rate ALL')
-    asics.request_hashrate_all()
+    # logging.info('Requesting hash rate ALL')
+    # asics.request_hashrate_all()
 
-    # logging.info('Requesting hash rate')
+    logging.info('Requesting hash rate')
     # for id in range(0, chip_counter):
-    #     logging.info(f'Request hashrate from chip {id * 2}')
-    #     asics.request_hashrate(id * 2)
+    logging.info(f'Request hashrate from chip {id * 2}')
+    asics.request_hashrate(8 * 2)
 
     while True:
         time.sleep(1)

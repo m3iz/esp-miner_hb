@@ -16,6 +16,11 @@ sdn_pin = 11
 chip_count = 48
 chip_frequency = 300
 
+receive_thread = None
+_read_index = 0
+_write_index = 0
+_buffer = bytearray([0] * 64)
+
 serial_lock = threading.Lock()
 serial_port = serial.Serial(
     port="/dev/ttyUSB0",  # For ASIC serial communication use usbmodemb310cc523
@@ -54,6 +59,31 @@ def reset_func():
     time.sleep(0.5)
     GPIO.output(nrst_pin, GPIO.HIGH)
     time.sleep(0.5)
+
+def _receive_thread():
+    logging.info('receiving thread started ...')
+    mask_nonce = 0x00000000
+    mask_version = 0x00000000
+
+    while True:
+        byte = _serial_rx_func(11, 100)
+
+        if not byte:
+            continue
+
+        for i in range(0, len(byte)):
+            _buffer[_write_index % 64] = byte[i]
+            _write_index += 1
+
+        if _write_index - _read_index >= 11 and _buffer[_read_index % 64] == 0xaa and _buffer[(_read_index + 1) % 64] == 0x55:
+            data = bytearray([0] * 11)
+            for i in range(0, 11):
+                data[i] = _buffer[_read_index % 64]
+                _read_index += 1
+
+            logging.warning(data)
+
+    logging.info('receiving thread ended ...')
 
 def main():
     # Setup GPIO
@@ -100,35 +130,18 @@ def main():
 
     print(chip_counter)
 
+
+    logging.info(f'Starting receive thread...')
+    receive_thread = threading.Thread(target=_receive_thread)
+    receive_thread.start()
+
     print('Requesting hash rate')
     for id in range(0, chip_counter):
         logging.info(f'Request hashrate from chip {id * 2}')
         asics.request_hashrate(id * 2)
 
-    _read_index = 0
-    _write_index = 0
-    _buffer = bytearray([0] * 64)
-
-    logging.info(f'Reading...')
-
     while True:
-        byte = _serial_rx_func(11, 100)
-
-        if not byte:
-            continue
-
-        for i in range(0, len(byte)):
-            _buffer[_write_index % 64] = byte[i]
-            _write_index += 1
-
-            if _write_index - _read_index >= 11 and _buffer[_read_index % 64] == 0xaa and _buffer[(_read_index + 1) % 64] == 0x55:
-                data = bytearray([0] * 11)
-                for i in range(0, 11):
-                    data[i] = _buffer[_read_index % 64]
-                    _read_index += 1
-
-                print(data)
-            print(_buffer)
+        time.sleep(1)
 
     GPIO.output(sdn_pin, GPIO.LOW)
     GPIO.output(nrst_pin, GPIO.LOW)

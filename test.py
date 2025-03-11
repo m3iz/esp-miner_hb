@@ -102,11 +102,14 @@ def main():
 
     print('Requesting hash rate')
     for id in range(0, chip_counter):
+        logging.info(f'Request hashrate from chip {id * 2}')
         asics.request_hashrate(id * 2)
 
     _read_index = 0
     _write_index = 0
     _buffer = bytearray([0] * 64)
+
+    logging.info(f'Reading...')
 
     while True:
         byte = _serial_rx_func(11, 100)

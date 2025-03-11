@@ -246,6 +246,8 @@ class BM1362:
         else:
             self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, freqbuf)
 
+        logging.info(f"Sending freqbuf: {freqbuf}")
+
         logging.info(f"Setting Frequency to {target_freq:.2f}MHz ({best[4]:.2f})")
 
         return freqbuf
@@ -295,7 +297,7 @@ class BM1362:
         # misc block
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x3C, 0x80, 0x00, 0x85, 0x40]) #command all chips, write chip address 00, register 3C, data 80 00 85 40 - Core Register Control
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x3C, 0x80, 0x00, 0x80, 0x08]) #command all chips, write chip address 00, register 3C, data 80 00 80 80 - Core Register Control
-        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x14, 0x00, 0x00, 0x00, 0xFF]) #command all chips, write chip address 00, register 14, data 00 00 00 FF - set ticket mask 
+        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x14, 0x00, 0x00, 0x00, 0xFF]) #command all chips, write chip address 00, register 14, data 00 00 00 FF - set ticket mask
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x54, 0x00, 0x00, 0x00, 0x03]) #command all chips, write chip address 00, register 54, data 00 00 00 03 - Analog Mux Control
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x58, 0x00, 0x01, 0x11, 0x11]) #command all chips, write chip address 00, register 58, data 00 01 11 11 - Set the IO Driver Strength on chip 00
 
@@ -312,17 +314,17 @@ class BM1362:
             if chips_enabled is not None and id not in chips_enabled:
                 continue
 
-            self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0xA8, 0x00, 0x00, 0x00, 0x02]) #command all chips, write chip address 00, register A8, data 00 00 00 02 - Reg_A8 
-            self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0x18, 0xB0, 0x00, 0xC1, 0x00]) #command all chips, write chip address 00, register 18, data B0 00 C1 00 - Misc Control 
-            self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0x3C, 0x80, 0x00, 0x85, 0x40]) #command all chips, write chip address 00, register 3C, data 80 00 85 40 - Core Register Control 
+            self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0xA8, 0x00, 0x00, 0x00, 0x02]) #command all chips, write chip address 00, register A8, data 00 00 00 02 - Reg_A8
+            self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0x18, 0xB0, 0x00, 0xC1, 0x00]) #command all chips, write chip address 00, register 18, data B0 00 C1 00 - Misc Control
+            self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0x3C, 0x80, 0x00, 0x85, 0x40]) #command all chips, write chip address 00, register 3C, data 80 00 85 40 - Core Register Control
             self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0x3C, 0x80, 0x00, 0x80, 0x08]) #command all chips, write chip address 00, register 3C, data 80 00 80 80 - Core Register Control
-            self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0x3C, 0x80, 0x00, 0x82, 0xAA]) #command all chips, write chip address 00, register 3C, data 80 00 82 AA - Core Register Control 
+            self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0x3C, 0x80, 0x00, 0x82, 0xAA]) #command all chips, write chip address 00, register 3C, data 80 00 82 AA - Core Register Control
             time.sleep(0.500)
 
 
         # start mining
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x10, 0x00, 0x00, 0x18, 0x81]) #HCN
-        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0xA4, 0x90, 0x00, 0xFF, 0xFF]) #enable and set version rolling mask to 0xFFFF 
+        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0xA4, 0x90, 0x00, 0xFF, 0xFF]) #enable and set version rolling mask to 0xFFFF
 
         return chip_counter
 

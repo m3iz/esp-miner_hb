@@ -71,6 +71,8 @@ def _receive_thread():
         if not byte:
             continue
 
+        logging.info('got some bytes')
+
         for i in range(0, len(byte)):
             _buffer[_write_index % 64] = byte[i]
             _write_index += 1

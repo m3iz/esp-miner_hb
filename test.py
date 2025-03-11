@@ -34,8 +34,8 @@ def _serial_tx_func(data):
             if sent == 0:
                 raise RuntimeError("Serial connection broken")
             total_sent += sent
-        # if debug:
-        logging.debug("-> %s", bytearray(data).hex())
+        if debug:
+            logging.info("-> %s", bytearray(data).hex())
 
 def _serial_rx_func(size, timeout_ms):
     serial_port.timeout = timeout_ms / 1000.0
@@ -43,9 +43,9 @@ def _serial_rx_func(size, timeout_ms):
     data = serial_port.read(size)
     bytes_read = len(data)
 
-    if bytes_read > 0:
-        logging.debug("serial_rx: %d", bytes_read)
-        logging.debug("<- %s", data.hex())
+    if debug and bytes_read > 0:
+        logging.info("serial_rx: %d", bytes_read)
+        logging.info("<- %s", data.hex())
 
     return data if bytes_read > 0 else None
 

@@ -124,6 +124,7 @@ class HashRateResponse:
         return result
 # aa55 13 62 03 0c 0c 00 00 00 0f
 # aa55 00 00 00 22 06 04 00 00 1b
+# aa55 00 00 00 22 10 04 00 00 12
 # 2B   B  B  B  B  B  B  B  B  B
 # 01   2  3  4  5  6  7  8  9  10
     def print(self):
@@ -273,7 +274,7 @@ class BM1362:
         print("\033[32m")
         print(f"Request hashrate {chipAddr}")
         print("\033[0m")
-        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x04])
+        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x10])
 
     def request_hashrate_all(self):
         print("\033[32m")

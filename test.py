@@ -4,7 +4,7 @@ import time
 import serial # type: ignore
 import OPi.GPIO as GPIO
 from orangepi import zero2
-from piaxe.bm1362 import BM1362
+from piaxe.bm1362 import BM1362, CMD_READ, GROUP_ALL, TYPE_CMD
 import logging
 import atexit
 
@@ -142,10 +142,13 @@ def main():
     # logging.info('Requesting hash rate ALL')
     # asics.request_hashrate_all()
 
-    logging.info('Requesting hash rate')
-    # for id in range(0, chip_counter):
-    logging.info(f'Request hashrate from chip {8 * 2}')
-    asics.request_hashrate(8 * 2)
+    # logging.info('Requesting hash rate')
+    # # for id in range(0, chip_counter):
+    # logging.info(f'Request hashrate from chip {8 * 2}')
+    # asics.request_hashrate(8 * 2)
+
+    logging.info('Requesting nonce offset')
+    asics.send(TYPE_CMD | GROUP_ALL | CMD_READ, [0x00, 0x0c])
 
     while True:
         time.sleep(1)

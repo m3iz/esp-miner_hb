@@ -91,14 +91,10 @@ class HashRateResponse:
 
     def __init__(self):
         self.preamble = [0x00, 0x00] # 2B
-        self.smth1 = 0 # B
-        self.smth2 = 0 # B
-        self.smth3 = 0 # B
-        self.smth4 = 0 # B
+        self.smth = 0 # B
         self.chip_address = 0 # B
         self.register_address = 0 # B
-        self.value1 = 0 # B
-        self.value2 = 0 # B
+        self.value = 0 # B
         self.crc = 0 # B
 
     @classmethod
@@ -111,14 +107,10 @@ class HashRateResponse:
 
         # Assign the unpacked data to the class fields.
         result.preamble = list(unpacked_data[0:2]) #2B
-        result.smth1 = unpacked_data[2] #I
-        result.smth2 = unpacked_data[3] #I
-        result.smth3 = unpacked_data[4] #I
-        result.smth4 = unpacked_data[5] #I
+        result.smth = unpacked_data[2:6]
         result.chip_address = unpacked_data[6] #B
         result.register_address = unpacked_data[7] #B
-        result.value1 = unpacked_data[8] #B
-        result.value2 = unpacked_data[9] #B
+        result.value = unpacked_data[8:10] #B
         result.crc = unpacked_data[10] #B
 
         return result
@@ -131,14 +123,10 @@ class HashRateResponse:
         print("\033[32m")
         print("HashRateResponse:")
         print(f"  preamble:        {self.preamble}")
-        print(f"  smth1:           {self.smth1}")
-        print(f"  smth2:           {self.smth2}")
-        print(f"  smth3:           {self.smth3}")
-        print(f"  smth4:           {self.smth4}")
+        print(f"  smth:           {self.smth}")
         print(f"  chip_address:    {self.chip_address}")
         print(f"  register_address:    {self.register_address}")
-        print(f"  value1:          {self.value1}")
-        print(f"  value2:          {self.value2}")
+        print(f"  value:          {self.value}")
         print(f"  crc:             {self.crc:02x}")
         print("\033[0m")
 
@@ -274,7 +262,17 @@ class BM1362:
         print("\033[32m")
         print(f"Request hashrate {chipAddr}")
         print("\033[0m")
+        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x04])
+        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x08])
+        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x0c])
         self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x10])
+        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x14])
+        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x16])
+        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x18])
+        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x1c])
+        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x20])
+        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x28])
+        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x2c])
 
     def request_hashrate_all(self):
         print("\033[32m")

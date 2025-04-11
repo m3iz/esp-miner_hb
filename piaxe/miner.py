@@ -431,7 +431,7 @@ class BM1366Miner:
         # Convert hash rate to GH/s
         hash_rate_ghps = hash_rate_hps / 1e9
         logging.debug("\033[32mhash rate (%d): %f GH/s\033[0m", time_period, hash_rate_ghps)
-        first_found_share_at = self.found_timestamps[0] if self.found_timestamps else 0
+        first_found_share_at = self.found_timestamps[0][0] if self.found_timestamps else 0
         uptime = current_time - first_found_share_at if first_found_share_at else 0
         logging.debug("\033[32muptime (%d): %f GH/s\033[0m", uptime)
         return hash_rate_ghps

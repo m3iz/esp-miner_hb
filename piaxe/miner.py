@@ -430,7 +430,10 @@ class BM1366Miner:
 
         # Convert hash rate to GH/s
         hash_rate_ghps = hash_rate_hps / 1e9
+        first_found_share_at = self.found_timestamps[0] if len(self.found_timestamps) else 0
+        uptime = current_time - first_found_share_at if first_found_share_at else 0
         logging.debug("\033[32mhash rate (%d): %f GH/s\033[0m", time_period, hash_rate_ghps)
+        logging.debug("\033[32muptime (%d): %f GH/s\033[0m", uptime)
         return hash_rate_ghps
 
     def _set_target(self, target):
@@ -482,11 +485,11 @@ class BM1366Miner:
                 #if self.debug_bm1366:
                 #    logging.debug("<- %s", bytes(data).hex())
 
-                try:
-                    hashrate_response = bm1362.HashRateResponse().from_bytes(bytes(data))
-                    hashrate_response.print()
-                except:
-                    pass
+                # try:
+                #     hashrate_response = bm1362.HashRateResponse().from_bytes(bytes(data))
+                #     hashrate_response.print()
+                # except:
+                #     pass
 
                 asic_result = bm1362.AsicResult().from_bytes(bytes(data))
                 if not asic_result or not asic_result.nonce:

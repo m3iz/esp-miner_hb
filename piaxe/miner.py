@@ -172,8 +172,8 @@ class BM1366Miner:
                 logging.error("Attempt %d: Not enough chips found: %s", attempt + 1, e)
 
                 # only retry on 1368s
-                if not isinstance(self.asics, bm1366.BM1368):
-                    raise
+                # if not isinstance(self.asics, bm1366.BM1368):
+                #     raise
 
                 if attempt < max_retries - 1:
                     time.sleep(1)  # Wait before the next attempt

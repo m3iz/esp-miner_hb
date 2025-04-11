@@ -433,7 +433,7 @@ class BM1366Miner:
         logging.debug("\033[32mhash rate (%d): %f GH/s\033[0m", time_period, hash_rate_ghps)
         first_found_share_at = self.found_timestamps[0][0] if self.found_timestamps else 0
         uptime = current_time - first_found_share_at if first_found_share_at else 0
-        logging.debug("\033[32muptime (%d): %f GH/s\033[0m", uptime)
+        logging.debug("\033[32muptime %ds\033[0m", uptime)
         return hash_rate_ghps
 
     def _set_target(self, target):

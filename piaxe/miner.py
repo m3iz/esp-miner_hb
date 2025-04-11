@@ -54,6 +54,8 @@ class BM1366Miner:
     def __init__(self, config, address, network):
         self.config = config
 
+        self.start_time = time.time()
+
         self.current_job = None
         self.current_work = None
         self.serial_port = None
@@ -356,7 +358,7 @@ class BM1366Miner:
             # self.hash_rate(300)
             # self.hash_rate(600)
 
-            self.asics.request_hashrate(8 * 2)
+            # self.asics.request_hashrate(8 * 2)
             time.sleep(15)
 
     def _serial_tx_func(self, data):
@@ -431,8 +433,7 @@ class BM1366Miner:
         # Convert hash rate to GH/s
         hash_rate_ghps = hash_rate_hps / 1e9
         logging.debug("\033[32mhash rate (%d): %f GH/s\033[0m", time_period, hash_rate_ghps)
-        first_found_share_at = self.found_timestamps[0][0] if self.found_timestamps else 0
-        uptime = current_time - first_found_share_at if first_found_share_at else 0
+        uptime = current_time - self.start_time
         logging.debug("\033[32muptime %ds\033[0m", uptime)
         return hash_rate_ghps
 

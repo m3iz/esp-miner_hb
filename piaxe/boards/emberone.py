@@ -21,7 +21,7 @@ class EmberoneHardware(board.Board):
         self.config = config
         self.nrst_pin = self.config['nrst_pin']
         self.sdn_pin = self.config['sdn_pin']
-        print(f'nrst_pin = {self.nrst_pin}, sdn_pin={self.sdn_pin}')
+        logging.debug(f'nrst_pin = {self.nrst_pin}, sdn_pin={self.sdn_pin}')
         GPIO.setup(self.sdn_pin, GPIO.OUT, initial=GPIO.LOW)
         GPIO.setup(self.nrst_pin, GPIO.OUT, initial=GPIO.HIGH)
 
@@ -38,7 +38,7 @@ class EmberoneHardware(board.Board):
         GPIO.output(self.sdn_pin, GPIO.HIGH)
         GPIO.output(self.nrst_pin, GPIO.HIGH)
 
-        print('Wait for init...')
+        logging.debug('Wait for init...')
         time.sleep(10)
 
     def gpio_set(self, pin, value):

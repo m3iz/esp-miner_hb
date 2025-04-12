@@ -169,8 +169,9 @@ class BM1366Miner:
         # currently the qaxe+ needs this loop :see-no-evil:
         for attempt in range(max_retries):
             try:
+                logging.warning("Initializing ASIC chips...")
                 chip_counter = self.asics.init(self.hardware.get_asic_frequency(), self.hardware.get_chip_count(), chips_enabled)
-                print("Initialization successful.")
+                logging.warning("Initialization successful.")
                 break
             except Exception as e:
                 logging.error("Attempt %d: Not enough chips found: %s", attempt + 1, e)
@@ -185,7 +186,7 @@ class BM1366Miner:
                     logging.error("Max retries reached. Initialization failed.")
                     raise
 
-        logging.info(f"{chip_counter} chips were found!")
+        logging.warning(f"{chip_counter} chips were found!")
 
         self.set_difficulty(512)
         self.extranonce2_interval = self.config[self.miner]["extranonce2_interval"]

@@ -601,6 +601,7 @@ class BM1366Miner:
                         uptime = current_time - self.start_time
                         logging.warning(f"{colors.OKCYAN}mining time {self.stats.uptime}{colors.ENDC}")
                         logging.warning(f"{colors.OKCYAN}process uptime {uptime}{colors.ENDC}")
+                        logging.warning(f"{colors.OKCYAN}{colors.UNDERLINE}_______________________________________________________________________________________________________________________{colors.ENDC}")
 
                         hash_difficulty = shared.calculate_difficulty_from_hash(hash)
                         self.stats.best_difficulty = max(self.stats.best_difficulty, hash_difficulty)

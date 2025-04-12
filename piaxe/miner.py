@@ -100,6 +100,8 @@ class BM1366Miner:
         self.verify_solo = self.config.get('verify_solo', False)
         self.debug_bm1366 = self.config.get("debug_bm1366", False)
 
+        self.submit_cb = None
+
     def shutdown(self):
         print('miner shutdown')
         # signal the threads to end

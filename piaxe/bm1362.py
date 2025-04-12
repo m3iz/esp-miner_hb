@@ -466,6 +466,7 @@ class BM1362:
 
         # Log the setting of job ASIC mask (replace with your logging method)
         logging.info("Setting job ASIC mask to %d", difficulty)
+        logging.info(job_difficulty_mask)
 
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, job_difficulty_mask)
 

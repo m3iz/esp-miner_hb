@@ -22,7 +22,7 @@
 
 import json, socket, sys, threading, time
 from urllib import parse as urlparse
-from shared import shared
+from shared import colors, shared
 #from cpu_miner import miner
 from piaxe import miner
 #import cpu_miner
@@ -357,10 +357,10 @@ class Miner(SimpleJsonRpcClient):
       if self._testing_mode:
         difficulty = difficulty / self._difficulty_divider
 
-        logging.warning('=================================================')
-        logging.warning('MINERS STARTS IN TESTING MODE')
-        logging.warning(f'DIFFICULTY DIVIDED BY {self._difficulty_divider}')
-        logging.warning('=================================================')
+        logging.warning(f'{colors.FAIL}================================================={colors.ENDC}')
+        logging.warning(f'{colors.FAIL}MINERS STARTS IN TESTING MODE{colors.ENDC}')
+        logging.warning(f'{colors.FAIL}DIFFICULTY DIVIDED BY {self._difficulty_divider}{colors.ENDC}')
+        logging.warning(f'{colors.FAIL}================================================={colors.ENDC}')
 
       self._miner.set_difficulty(int(difficulty))
 

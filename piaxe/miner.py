@@ -594,7 +594,7 @@ class BM1366Miner:
                         if is_valid and not duplicate:
                             self.shares.append((1, difficulty, time.time()))
 
-                        self.hash_rate(120)
+                        self.hash_rate(60)
                         self.stats.hashing_speed = self.hash_rate()
                         hash_difficulty = shared.calculate_difficulty_from_hash(hash)
                         self.stats.best_difficulty = max(self.stats.best_difficulty, hash_difficulty)

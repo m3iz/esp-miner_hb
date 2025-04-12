@@ -309,7 +309,8 @@ class Miner(SimpleJsonRpcClient):
     self._job = None
 
     self._miner = miner
-    self._miner.set_submit_callback(self.mining_submit)
+    if not self._testing_mode:
+      self._miner.set_submit_callback(self.mining_submit)
 
     self._accepted_shares = 0
 

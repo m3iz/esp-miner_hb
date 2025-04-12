@@ -42,17 +42,17 @@ class Stats:
         self.lock = threading.Lock()
 
     def print(self):
-        logging.info(f'{colors.WARNING}==== MINER STATS START ==== {colors.ENDC}')
-        logging.info(f'{colors.WARNING}{self.hashing_speed=}{colors.ENDC}')
-        logging.info(f'{colors.WARNING}{self.invalid_shares=}{colors.ENDC}')
-        logging.info(f'{colors.WARNING}{self.valid_shares=}{colors.ENDC}')
-        logging.info(f'{colors.WARNING}{self.best_difficulty=}{colors.ENDC}')
-        logging.info(f'{colors.WARNING}{self.accepted=}{colors.ENDC}')
-        logging.info(f'{colors.WARNING}{self.not_accepted=}{colors.ENDC}')
-        logging.info(f'{colors.WARNING}{self.total_best_difficulty=}{colors.ENDC}')
-        logging.info(f'{colors.WARNING}{self.total_uptime=}{colors.ENDC}')
-        logging.info(f'{colors.WARNING}{self.uptime=}{colors.ENDC}')
-        logging.info(f'{colors.WARNING}==== MINER STATS END ==== {colors.ENDC}')
+        logging.debug(f'{colors.WARNING}==== MINER STATS START ==== {colors.ENDC}')
+        logging.debug(f'{colors.WARNING}{self.hashing_speed=}{colors.ENDC}')
+        logging.debug(f'{colors.WARNING}{self.invalid_shares=}{colors.ENDC}')
+        logging.debug(f'{colors.WARNING}{self.valid_shares=}{colors.ENDC}')
+        logging.debug(f'{colors.WARNING}{self.best_difficulty=}{colors.ENDC}')
+        logging.debug(f'{colors.WARNING}{self.accepted=}{colors.ENDC}')
+        logging.debug(f'{colors.WARNING}{self.not_accepted=}{colors.ENDC}')
+        logging.debug(f'{colors.WARNING}{self.total_best_difficulty=}{colors.ENDC}')
+        logging.debug(f'{colors.WARNING}{self.total_uptime=}{colors.ENDC}')
+        logging.debug(f'{colors.WARNING}{self.uptime=}{colors.ENDC}')
+        logging.debug(f'{colors.WARNING}==== MINER STATS END ==== {colors.ENDC}')
 
     def import_dict(self, data):
         self.total_uptime = data.get('total_uptime', self.total_uptime)

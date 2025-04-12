@@ -434,9 +434,10 @@ class BM1366Miner:
 
         # Convert hash rate to GH/s
         hash_rate_ghps = hash_rate_hps / 1e9
-        logging.debug("\033[32mhash rate (%d): %f GH/s\033[0m", time_period, hash_rate_ghps)
+        logging.warning("\033[32mhash rate (%d): %f GH/s\033[0m", time_period, hash_rate_ghps)
         uptime = current_time - self.start_time
-        logging.debug("\033[32muptime %ds\033[0m", uptime)
+        logging.warning("\033[32mmining uptime %ds\033[0m", self.stats.uptime)
+        logging.warning("\033[32mprocess uptime %ds\033[0m", uptime)
         return hash_rate_ghps
 
     def _set_target(self, target):

@@ -546,7 +546,7 @@ if __name__ == '__main__':
     print(message)
     sys.exit(1)
 
-  log_level = logging.INFO
+  log_level = logging.WARNING
 
   if options.debug:
     log_level = logging.DEBUG

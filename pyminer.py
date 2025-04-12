@@ -294,7 +294,7 @@ class Miner(SimpleJsonRpcClient):
 
   class MinerAuthenticationException(SimpleJsonRpcClient.RequestReplyException): pass
 
-  def __init__(self, url, username, password, miner, suggest_difficulty, testing_mode=False):
+  def __init__(self, url, username, password, miner, suggest_difficulty, testing_mode=False, difficulty_divider=1):
     SimpleJsonRpcClient.__init__(self)
 
     self._url = url
@@ -302,6 +302,7 @@ class Miner(SimpleJsonRpcClient):
     self._password = password
     self._suggest_difficulty = suggest_difficulty
     self._testing_mode = testing_mode
+    self._difficulty_divider = difficulty_divider
 
     self._subscription = SubscriptionSHA256D()
 
@@ -353,11 +354,11 @@ class Miner(SimpleJsonRpcClient):
 
       (difficulty, ) = reply['params']
       if self._testing_mode:
-        difficulty = difficulty / 8
+        difficulty = difficulty / self._difficulty_divider
 
         logging.warning('=================================================')
         logging.warning('MINERS STARTS IN TESTING MODE')
-        logging.warning('DIFFICULTY DIVIDED BY 8')
+        logging.warning(f'DIFFICULTY DIVIDED BY {self._difficulty_divider}')
         logging.warning('=================================================')
 
       self._miner.set_difficulty(int(difficulty))
@@ -589,7 +590,7 @@ if __name__ == '__main__':
 
   while True:
     try:
-      pyminer = Miner(options.url, username, password, piaxeMiner, suggest_difficulty, config.get('testing_mode', False))
+      pyminer = Miner(options.url, username, password, piaxeMiner, suggest_difficulty, config.get('testing_mode', False), config.get('difficulty_divider', 1))
       pyminer.serve()
     except Exception as e:
       logging.error("exception in serve ... restarting client")

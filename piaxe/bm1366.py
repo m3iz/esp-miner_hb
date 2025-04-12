@@ -284,18 +284,18 @@ class BM1366:
             raise Exception(f"chips mismatch. expected: {expected}, actual: {chip_counter}")
 
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0xa8, 0x00, 0x07, 0x00, 0x00])
-        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x18, 0xff, 0x0f, 0xc1, 0x00])
+        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x18, 0xff, 0x0f, 0xc1, 0x00]) # Misc Control
 
         for id in range(0, chip_counter):
             self.set_chip_address(id * 2)
 
-        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x3C, 0x80, 0x00, 0x85, 0x40])
-        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x3C, 0x80, 0x00, 0x80, 0x20])
-        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x14, 0x00, 0x00, 0x00, 0xFF])
-        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x54, 0x00, 0x00, 0x00, 0x03])
-        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x58, 0x02, 0x11, 0x11, 0x11])
+        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x3C, 0x80, 0x00, 0x85, 0x40]) # Core Register Control
+        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x3C, 0x80, 0x00, 0x80, 0x20]) # Core Register Control
+        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x14, 0x00, 0x00, 0x00, 0xFF]) # Ticket Mask
+        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x54, 0x00, 0x00, 0x00, 0x03]) # Analog Mux Control
+        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x58, 0x02, 0x11, 0x11, 0x11]) # Io Driver Strength Configuration // Resetting
 
-        self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [0x00, 0x2c, 0x00, 0x7c, 0x00, 0x03])
+        self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [0x00, 0x2c, 0x00, 0x7c, 0x00, 0x03]) # UART Relay
 
         # change baud
         #self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x11, 0x30, 0x02, 0x00])
@@ -304,18 +304,18 @@ class BM1366:
             if chips_enabled is not None and id not in chips_enabled:
                 continue
 
-            self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0xA8, 0x00, 0x07, 0x01, 0xF0])
-            self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0x18, 0xF0, 0x00, 0xC1, 0x00])
-            self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0x3C, 0x80, 0x00, 0x85, 0x40])
-            self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0x3C, 0x80, 0x00, 0x80, 0x20])
-            self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0x3C, 0x80, 0x00, 0x82, 0xAA])
+            self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0xA8, 0x00, 0x07, 0x01, 0xF0]) # ?
+            self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0x18, 0xF0, 0x00, 0xC1, 0x00]) # Misc Control
+            self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0x3C, 0x80, 0x00, 0x85, 0x40]) # Core Register Control
+            self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0x3C, 0x80, 0x00, 0x80, 0x20]) # Core Register Control
+            self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0x3C, 0x80, 0x00, 0x82, 0xAA]) # Core Register Control
             time.sleep(0.500)
 
         self.clock_manager = ClockManager(self, frequency, chip_counter)
         self.clock_manager.do_frequency_ramp_up(frequency)
 
-        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x10, 0x00, 0x00, 0x15, 0x1c])
-        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0xA4, 0x90, 0x00, 0xFF, 0xFF])
+        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x10, 0x00, 0x00, 0x15, 0x1c]) # Hash Counting Number
+        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0xA4, 0x90, 0x00, 0xFF, 0xFF]) #
 
         return chip_counter
 

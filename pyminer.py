@@ -294,13 +294,14 @@ class Miner(SimpleJsonRpcClient):
 
   class MinerAuthenticationException(SimpleJsonRpcClient.RequestReplyException): pass
 
-  def __init__(self, url, username, password, miner, suggest_difficulty):
+  def __init__(self, url, username, password, miner, suggest_difficulty, testing_mode=False):
     SimpleJsonRpcClient.__init__(self)
 
     self._url = url
     self._username = username
     self._password = password
     self._suggest_difficulty = suggest_difficulty
+    self._testing_mode = testing_mode
 
     self._subscription = SubscriptionSHA256D()
 
@@ -351,6 +352,14 @@ class Miner(SimpleJsonRpcClient):
         raise self.MinerWarning('Malformed mining.set_difficulty message', reply)
 
       (difficulty, ) = reply['params']
+      if self._testing_mode:
+        difficulty = difficulty / 8
+
+        logging.warning('=================================================')
+        logging.warning('MINERS STARTS IN TESTING MODE')
+        logging.warning('DIFFICULTY DIVIDED BY 8')
+        logging.warning('=================================================')
+
       self._miner.set_difficulty(int(difficulty))
 
       logging.debug('Change difficulty: difficulty=%s' % difficulty)
@@ -580,7 +589,7 @@ if __name__ == '__main__':
 
   while True:
     try:
-      pyminer = Miner(options.url, username, password, piaxeMiner, suggest_difficulty)
+      pyminer = Miner(options.url, username, password, piaxeMiner, suggest_difficulty, config.get('testing_mode', False))
       pyminer.serve()
     except Exception as e:
       logging.error("exception in serve ... restarting client")

@@ -13,6 +13,7 @@ emberone:
   sdn_pin: 11
   extranonce2_interval: 1.5
   serial_port_asic: "/dev/ttyUSB0"
+  testing_mode: true
 
 piaxe:
   name: PiAxe

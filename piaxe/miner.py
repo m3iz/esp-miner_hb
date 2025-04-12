@@ -1,6 +1,5 @@
 
 
-from turtle import color
 import serial # type: ignore
 import time
 import logging

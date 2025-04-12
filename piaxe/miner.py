@@ -598,6 +598,8 @@ class BM1366Miner:
                         self.stats.best_difficulty = max(self.stats.best_difficulty, hash_difficulty)
                         self.stats.total_best_difficulty = max(self.stats.total_best_difficulty, hash_difficulty)
 
+                        self.stats.print()
+
                     # restart miner with new extranonce2
                     #self.new_job_event.set() TODO
 

@@ -8,6 +8,8 @@ import threading
 import json
 import time
 
+from shared import colors
+
 class Stats:
     def __init__(self):
         self.temp = 25.0
@@ -38,6 +40,19 @@ class Stats:
         self.asic_temp4 = None
 
         self.lock = threading.Lock()
+
+    def print(self):
+        logging.info(f'{colors.WARNING}==== MINER STATS START ==== {colors.ENDC}')
+        logging.info(f'{colors.WARNING}{self.hashing_speed=}{colors.ENDC}')
+        logging.info(f'{colors.WARNING}{self.invalid_shares=}{colors.ENDC}')
+        logging.info(f'{colors.WARNING}{self.valid_shares=}{colors.ENDC}')
+        logging.info(f'{colors.WARNING}{self.best_difficulty=}{colors.ENDC}')
+        logging.info(f'{colors.WARNING}{self.accepted=}{colors.ENDC}')
+        logging.info(f'{colors.WARNING}{self.not_accepted=}{colors.ENDC}')
+        logging.info(f'{colors.WARNING}{self.total_best_difficulty=}{colors.ENDC}')
+        logging.info(f'{colors.WARNING}{self.total_uptime=}{colors.ENDC}')
+        logging.info(f'{colors.WARNING}{self.uptime=}{colors.ENDC}')
+        logging.info(f'{colors.WARNING}==== MINER STATS END ==== {colors.ENDC}')
 
     def import_dict(self, data):
         self.total_uptime = data.get('total_uptime', self.total_uptime)

@@ -597,13 +597,13 @@ class BM1366Miner:
 
                         current_time = time.time()
                         logging.warning(f"")
-                        logging.warning(f"{colors.OKGREEN}{colors.UNDERLINE}Hash rate:  {colors.ENDC}")
+                        logging.warning(f"{colors.OKGREEN}{colors.UNDERLINE}Hash rate:{colors.ENDC}")
                         logging.warning(f"{colors.OKGREEN}60s:  {colors.FAIL}{colors.BOLD}{int(hashing_speed_60)} GH/s{colors.ENDC}")
                         logging.warning(f"{colors.OKGREEN}600s: {colors.FAIL}{colors.BOLD}{int(self.stats.hashing_speed)} GH/s{colors.ENDC}")
                         uptime = current_time - self.start_time
                         logging.warning(f"{colors.OKCYAN}Mining time:    {self.stats.uptime}s{colors.ENDC}")
                         logging.warning(f"{colors.OKCYAN}Process uptime: {int(uptime)}s{colors.ENDC}")
-                        logging.warning(f"{colors.OKCYAN}{colors.UNDERLINE}---------------------------------------------{colors.ENDC}")
+                        logging.warning(f"{colors.OKCYAN}{colors.UNDERLINE}—————————————————————————————————————————————{colors.ENDC}")
 
                         hash_difficulty = shared.calculate_difficulty_from_hash(hash)
                         self.stats.best_difficulty = max(self.stats.best_difficulty, hash_difficulty)

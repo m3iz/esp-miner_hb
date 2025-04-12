@@ -3,3 +3,5 @@ docker/monitoring/data/*
 *.pyc
 
 venv
+
+config.*.yml

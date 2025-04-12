@@ -357,10 +357,10 @@ class Miner(SimpleJsonRpcClient):
       if self._testing_mode:
         difficulty = difficulty / self._difficulty_divider
 
-        logging.warning(f'{colors.FAIL}================================================={colors.ENDC}')
-        logging.warning(f'{colors.FAIL}MINERS STARTS IN TESTING MODE{colors.ENDC}')
-        logging.warning(f'{colors.FAIL}DIFFICULTY DIVIDED BY {self._difficulty_divider}{colors.ENDC}')
-        logging.warning(f'{colors.FAIL}================================================={colors.ENDC}')
+        logging.warning(f'{colors.FAIL}{colors.BOLD}================================================={colors.ENDC}')
+        logging.warning(f'{colors.FAIL}{colors.BOLD}MINER STARTS IN TESTING MODE{colors.ENDC}')
+        logging.warning(f'{colors.FAIL}{colors.BOLD}DIFFICULTY DIVIDED BY {self._difficulty_divider}{colors.ENDC}')
+        logging.warning(f'{colors.FAIL}{colors.BOLD}================================================={colors.ENDC}')
 
       self._miner.set_difficulty(int(difficulty))
 

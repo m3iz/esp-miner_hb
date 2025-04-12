@@ -1,5 +1,6 @@
 
 
+from turtle import color
 import serial # type: ignore
 import time
 import logging
@@ -11,7 +12,7 @@ import yaml # type: ignore
 import json
 
 import threading
-from shared import shared
+from shared import colors, shared
 
 from . import ssd1306
 from . import bm1366
@@ -435,11 +436,6 @@ class BM1366Miner:
 
         # Convert hash rate to GH/s
         hash_rate_ghps = hash_rate_hps / 1e9
-        logging.warning("\033[32mhash rate (%d): %f GH/s\033[0m", time_period, hash_rate_ghps)
-        uptime = current_time - self.start_time
-        if time_period < 600:
-            logging.warning("\033[32mmining uptime %ds\033[0m", self.stats.uptime)
-            logging.warning("\033[32mprocess uptime %ds\033[0m", uptime)
         return hash_rate_ghps
 
     def _set_target(self, target):
@@ -597,8 +593,15 @@ class BM1366Miner:
                         if is_valid and not duplicate:
                             self.shares.append((1, difficulty, time.time()))
 
-                        self.hash_rate(60)
+                        hashing_speed_60 = self.hash_rate(60)
                         self.stats.hashing_speed = self.hash_rate()
+
+                        current_time = time.time()
+                        logging.warning(f"{colors.OKGREEN}hash rate:  {colors.BOLD}60s: {int(hashing_speed_60)} GH/s, 600s: {int(self.stats.hashing_speed)} GH/s{colors.ENDC}")
+                        uptime = current_time - self.start_time
+                        logging.warning(f"{colors.OKCYAN}mining time {self.stats.uptime}{colors.ENDC}")
+                        logging.warning(f"{colors.OKCYAN}process uptime {uptime}{colors.ENDC}")
+
                         hash_difficulty = shared.calculate_difficulty_from_hash(hash)
                         self.stats.best_difficulty = max(self.stats.best_difficulty, hash_difficulty)
                         self.stats.total_best_difficulty = max(self.stats.total_best_difficulty, hash_difficulty)

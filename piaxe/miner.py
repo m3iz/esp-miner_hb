@@ -436,8 +436,9 @@ class BM1366Miner:
         hash_rate_ghps = hash_rate_hps / 1e9
         logging.warning("\033[32mhash rate (%d): %f GH/s\033[0m", time_period, hash_rate_ghps)
         uptime = current_time - self.start_time
-        logging.warning("\033[32mmining uptime %ds\033[0m", self.stats.uptime)
-        logging.warning("\033[32mprocess uptime %ds\033[0m", uptime)
+        if time_period < 600:
+            logging.warning("\033[32mmining uptime %ds\033[0m", self.stats.uptime)
+            logging.warning("\033[32mprocess uptime %ds\033[0m", uptime)
         return hash_rate_ghps
 
     def _set_target(self, target):
@@ -617,10 +618,11 @@ class BM1366Miner:
 
 
                 logging.info("valid result")
-                if not self.submit_cb:
-                    logging.error("no submit callback set")
-                elif not self.submit_cb(result):
-                    self.stats.pool_errors += 1
+                if not self.config.get('testing_mode'):
+                    if not self.submit_cb:
+                        logging.error("no submit callback set")
+                    elif not self.submit_cb(result):
+                        self.stats.pool_errors += 1
 
         logging.info('receiving thread ended ...')
 

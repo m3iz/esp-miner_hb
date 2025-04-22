@@ -196,8 +196,8 @@ class BM1366Miner:
         self.temp_thread = threading.Thread(target=self._monitor_hash_rate)
         self.temp_thread.start()
 
-        self.temp_thread = threading.Thread(target=self._monitor_temperature)
-        self.temp_thread.start()
+        # self.temp_thread = threading.Thread(target=self._monitor_temperature)
+        # self.temp_thread.start()
 
         self.receive_thread = threading.Thread(target=self._receive_thread)
         self.receive_thread.start()
@@ -208,8 +208,8 @@ class BM1366Miner:
         self.uptime_counter_thread = threading.Thread(target=self._uptime_counter_thread)
         self.uptime_counter_thread.start()
 
-        self.led_thread = threading.Thread(target=self._led_thread)
-        self.led_thread.start()
+        # self.led_thread = threading.Thread(target=self._led_thread)
+        # self.led_thread.start()
 
         influx_config = self.config.get('influx', None)
         self.influx = None

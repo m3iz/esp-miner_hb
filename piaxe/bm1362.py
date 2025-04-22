@@ -10,6 +10,8 @@ from .crc_functions import crc5, crc16_false
 from . import utils
 import binascii
 
+from shared import colors
+
 TYPE_JOB = 0x20
 TYPE_CMD = 0x40
 
@@ -594,11 +596,11 @@ class BM1368(BM1362):
         self.clock_manager.do_frequency_ramp_up(frequency)
 
         # change baud
-        logging.warning('Changing baudrate to 3 125 000')
+        logging.warning(f'{colors.FAIL}Changing baudrate to 3 125 000{colors.ENDC}')
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x11, 0x30, 0x02, 0x00])
         time.sleep(2)
         self.serial_port.baudrate = 3125000
-        logging.warning(f'Baudrate changed to {self.serial_port.baudrate}')
+        logging.warning(f'{colors.FAIL}Baudrate changed to {self.serial_port.baudrate}{colors.ENDC}')
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x10, 0x00, 0x00, 0x15, 0xa4])
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0xA4, 0x90, 0x00, 0xFF, 0xFF])
 

@@ -210,7 +210,11 @@ class ClockManager:
 
 class BM1362:
     def __init__(self):
+        self.serial_port = None
         self.chip_id_response="aa5513620300000000001e"
+
+    def set_serial_port(self, serial_port):
+        self.serial_port = serial_port
 
     def ll_init(self, _serial_tx_func, _serial_rx_func, _reset_func):
         self.serial_tx_func = _serial_tx_func
@@ -590,7 +594,9 @@ class BM1368(BM1362):
         self.clock_manager.do_frequency_ramp_up(frequency)
 
         # change baud
-        #self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x11, 0x30, 0x02, 0x00])
+        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x11, 0x30, 0x02, 0x00])
+        time.sleep(2)
+        self.serial_port.setBaudrate(3000000)
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x10, 0x00, 0x00, 0x15, 0xa4])
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0xA4, 0x90, 0x00, 0xFF, 0xFF])
 

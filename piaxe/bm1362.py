@@ -604,7 +604,7 @@ class BM1368(BM1362):
 
         # change baud
         logging.warning(f'{colors.FAIL}Changing baudrate to 3 125 000{colors.ENDC}')
-        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x11, 0x30, 0x02, 0x00])
+        self.set_max_baud()
         time.sleep(2)
         self.serial_port.baudrate = 3125000
         logging.warning(f'{colors.FAIL}Baudrate changed to {self.serial_port.baudrate}{colors.ENDC}')

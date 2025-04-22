@@ -398,6 +398,13 @@ class BM1362:
             time.sleep(0.500)
 
 
+        # change baud
+        logging.warning(f'{colors.FAIL}Changing baudrate to 3 125 000{colors.ENDC}')
+        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x11, 0x30, 0x02, 0x00])
+        time.sleep(2)
+        self.serial_port.baudrate = 3125000
+        logging.warning(f'{colors.FAIL}Baudrate changed to {self.serial_port.baudrate}{colors.ENDC}')
+
         # start mining
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x10, 0x00, 0x00, 0x18, 0x81]) #HCN
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0xA4, 0x90, 0x00, 0xFF, 0xFF]) #enable and set version rolling mask to 0xFFFF

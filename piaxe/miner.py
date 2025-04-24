@@ -196,8 +196,8 @@ class BM1366Miner:
         self.temp_thread = threading.Thread(target=self._monitor_hash_rate)
         self.temp_thread.start()
 
-        # self.temp_thread = threading.Thread(target=self._monitor_temperature)
-        # self.temp_thread.start()
+        self.temp_thread = threading.Thread(target=self._monitor_temperature)
+        self.temp_thread.start()
 
         self.receive_thread = threading.Thread(target=self._receive_thread)
         self.receive_thread.start()
@@ -323,10 +323,6 @@ class BM1366Miner:
 
             temp = self.hardware.read_temperature_and_voltage()
 
-            # trigger measurement of metrics
-            if isinstance(self.asics, bm1366.BM1368):
-                self.asics.request_temps()
-
             with self.stats.lock:
                 self.stats.temp = temp["temp"][0]
                 self.stats.temp2 = temp["temp"][1]
@@ -345,7 +341,14 @@ class BM1366Miner:
                     self.stats.asic_temp4
                 ]
 
-            logging.info("temperature and voltage: %s", str(temp))
+            logging.info(f"{colors.OKCYAN}------------TEMPERATURES----------{colors.ENDC}")
+            logging.info(f"{colors.OKCYAN}Ambient: {temp['ambient_temp']}Cº{colors.ENDC}")
+            logging.info(f"{colors.OKCYAN}DCDC: {temp['dcdc_temp']}Cº{colors.ENDC}")
+            logging.info(f"{colors.OKCYAN}Hashboards:{colors.ENDC}")
+            logging.info(f"{colors.OKCYAN}             {temp['temp'][0]}Cº  {temp['temp'][1]}Cº  {temp['temp'][2]}Cº  {temp['temp'][3]}Cº{colors.ENDC}")
+            logging.info(f"{colors.OKCYAN}----------------------------------{colors.ENDC}")
+
+            # logging.info("temperature and voltage: %s", str(temp))
 
 
 

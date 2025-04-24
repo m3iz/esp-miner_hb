@@ -1,5 +1,6 @@
 import logging
 import time
+from smbus2 import SMBus
 
 
 try:
@@ -21,6 +22,17 @@ class EmberoneHardware(board.Board):
         self.config = config
         self.nrst_pin = self.config['nrst_pin']
         self.sdn_pin = self.config['sdn_pin']
+
+        self.i2c_bus = self.config['i2c_bus']
+        self.i2c_multiplexor_addr = self.config['i2c_multiplexor_addr']
+        self.i2c_temperature_sensor_channel = self.config['i2c_temperature_sensor_channel']
+        self.temp_ambient_addr = self.config['temp_ambient_addr']
+        self.temp_dcdc_addr = self.config['temp_dcdc_addr']
+        self.temp_hashboard_1_addr = self.config['temp_hashboard_1_addr']
+        self.temp_hashboard_2_addr = self.config['temp_hashboard_2_addr']
+        self.temp_hashboard_3_addr = self.config['temp_hashboard_3_addr']
+        self.temp_hashboard_4_addr = self.config['temp_hashboard_4_addr']
+
         logging.debug(f'nrst_pin = {self.nrst_pin}, sdn_pin={self.sdn_pin}')
         GPIO.setup(self.sdn_pin, GPIO.OUT, initial=GPIO.LOW)
         GPIO.setup(self.nrst_pin, GPIO.OUT, initial=GPIO.HIGH)
@@ -48,9 +60,32 @@ class EmberoneHardware(board.Board):
     def set_fan_speed(self, channel, percent):
         pass
 
+    def select_i2c_channel(self, channel):
+        with SMBus(self.i2c_bus) as bus:
+            bus.write_byte(self.i2c_multiplexor_addr, 1 << channel)
+
+    def read_temp(self, channel, addr):
+        try:
+            self.select_i2c_channel(channel)
+            with SMBus(self.i2c_bus) as bus:
+                data = bus.read_i2c_block_data(addr, 0x00, 2)
+                temp_raw = (data[0] << 8) | data[1]
+                temperature = temp_raw / 256.0
+                return round(temperature, 2)
+        except Exception as e:
+            print(f"Error on channel {channel}: {e}")
+            return None
+
     def read_temperature_and_voltage(self):
         return {
-            "temp": [None, None, None, None],
+            "ambient_temp": self.read_temp(self.i2c_temperature_sensor_channel, self.temp_ambient_addr),
+            "dcdc_temp": self.read_temp(self.i2c_temperature_sensor_channel, self.temp_dcdc_addr),
+            "temp": [
+                self.temp_hashboard_1_addr,
+                self.temp_hashboard_2_addr,
+                self.temp_hashboard_3_addr,
+                self.temp_hashboard_4_addr
+            ],
             "voltage": [None, None, None, None],
         }
 

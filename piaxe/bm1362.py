@@ -393,7 +393,7 @@ class BM1362:
             self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0x3C, 0x80, 0x00, 0x85, 0x40]) #command all chips, write chip address 00, register 3C, data 80 00 85 40 - Core Register Control
             self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0x3C, 0x80, 0x00, 0x80, 0x08]) #command all chips, write chip address 00, register 3C, data 80 00 80 80 - Core Register Control
             self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0x3C, 0x80, 0x00, 0x82, 0xAA]) #command all chips, write chip address 00, register 3C, data 80 00 82 AA - Core Register Control
-            time.sleep(0.500)
+            time.sleep(0.050)
 
         # start mining
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x10, 0x00, 0x00, 0x18, 0x81]) #HCN

@@ -84,7 +84,7 @@ class EmberoneHardware(board.Board):
                 self.read_temp(self.i2c_temperature_sensor_channel, self.temp_hashboard_1_addr),
                 self.read_temp(self.i2c_temperature_sensor_channel, self.temp_hashboard_2_addr),
                 self.read_temp(self.i2c_temperature_sensor_channel, self.temp_hashboard_3_addr),
-                self.read_temp(self.i2c_temperature_sensor_channel, self.temp_hashboard_4_add)r
+                self.read_temp(self.i2c_temperature_sensor_channel, self.temp_hashboard_4_addr),
             ],
             "voltage": [None, None, None, None],
         }

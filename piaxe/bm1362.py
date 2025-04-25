@@ -380,10 +380,10 @@ class BM1362:
         # self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [0x00, 0x2c, 0x00, 0x7c, 0x00, 0x03]) #command all chips, write chip address 00, register 2C, data 00 7C 00 03 - Fast UART Configuration
 
         # change baudrate
-        logging.warning(f'{colors.FAIL}Changing baudrate to 3 000 000{colors.ENDC}')
+        logging.warning(f'{colors.FAIL}Changing baudrate to 3 125 000{colors.ENDC}')
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x11, 0x30, 0x00, 0x00, 0x00]) # Got from Matt's cgminer
         time.sleep(2)
-        self.serial_port.baudrate = 3000000
+        self.serial_port.baudrate = 3_125_000
         logging.warning(f'{colors.FAIL}Baudrate changed to {self.serial_port.baudrate}{colors.ENDC}')
 
         self.clock_manager = ClockManager(self, frequency, chip_counter)

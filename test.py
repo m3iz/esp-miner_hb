@@ -11,8 +11,8 @@ from shared import colors
 
 debug = True
 
-nrst_pin = 15
-sdn_pin = 11
+nrst_pin = 16
+sdn_pin = 12
 
 chip_count = 48
 chip_frequency = 300

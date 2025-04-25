@@ -268,17 +268,8 @@ class BM1362:
         print("\033[32m")
         print(f"Request hashrate {chipAddr}")
         print("\033[0m")
-        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x04])
-        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x08])
-        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x0c])
-        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x10])
-        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x14])
-        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x16])
-        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x18])
-        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x1c])
-        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x20])
         self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x28])
-        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x2c])
+        self.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x60])
 
     def request_hashrate_all(self):
         print("\033[32m")
@@ -379,13 +370,13 @@ class BM1362:
 
         # self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [0x00, 0x2c, 0x00, 0x7c, 0x00, 0x03]) #command all chips, write chip address 00, register 2C, data 00 7C 00 03 - Fast UART Configuration
 
-        # change baudrate
-        logging.warning(f'{colors.FAIL}Changing baudrate to 3 125 000{colors.ENDC}')
-        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x11, 0x30, 0x00, 0x00, 0x00]) # Got from Matt's cgminer
-        time.sleep(2)
-        self.serial_port.baudrate = 3_125_000
-        logging.warning(f'{colors.FAIL}Baudrate changed to {self.serial_port.baudrate}{colors.ENDC}')
-        time.sleep(2)
+        # # change baudrate
+        # logging.warning(f'{colors.FAIL}Changing baudrate to 3 125 000{colors.ENDC}')
+        # self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x11, 0x30, 0x00, 0x00, 0x00]) # Got from Matt's cgminer
+        # time.sleep(2)
+        # self.serial_port.baudrate = 3_125_000
+        # logging.warning(f'{colors.FAIL}Baudrate changed to {self.serial_port.baudrate}{colors.ENDC}')
+        # time.sleep(2)
 
         self.clock_manager = ClockManager(self, frequency, chip_counter)
 

@@ -7,6 +7,7 @@ from orangepi import zero2
 from piaxe.bm1362 import BM1362, CMD_READ, GROUP_ALL, TYPE_CMD
 import logging
 import atexit
+from shared import colors
 
 debug = True
 
@@ -40,7 +41,7 @@ def _serial_tx_func(data):
                 raise RuntimeError("Serial connection broken")
             total_sent += sent
         if debug:
-            logging.info("-> %s", bytearray(data).hex())
+            logging.info(f"{colors.OKBLUE}-> {bytearray(data).hex()}{colors.ENDC}")
 
 def _serial_rx_func(size, timeout_ms):
     serial_port.timeout = timeout_ms / 1000.0
@@ -49,8 +50,8 @@ def _serial_rx_func(size, timeout_ms):
     bytes_read = len(data)
 
     if debug and bytes_read > 0:
-        logging.info("serial_rx: %d", bytes_read)
-        logging.info("<- %s", data.hex())
+        logging.info(f"{colors.OKGREEN}serial_rx: {bytes_read}{colors.ENDC}")
+        logging.info(f"{colors.OKGREEN}<- {data.hex()}{colors.ENDC}")
 
     return data if bytes_read > 0 else None
 
@@ -142,10 +143,10 @@ def main():
     # logging.info('Requesting hash rate ALL')
     # asics.request_hashrate_all()
 
-    # logging.info('Requesting hash rate')
-    # # for id in range(0, chip_counter):
-    # logging.info(f'Request hashrate from chip {8 * 2}')
-    # asics.request_hashrate(8 * 2)
+    logging.info('Requesting hash rate')
+    # for id in range(0, chip_counter):
+    logging.info(f'Request hashrate from chip {8 * 2}')
+    asics.request_hashrate(8 * 2)
 
     logging.info('Requesting nonce offset')
     asics.send(TYPE_CMD | GROUP_ALL | CMD_READ, [0x00, 0x0c])

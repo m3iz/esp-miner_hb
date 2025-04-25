@@ -385,6 +385,7 @@ class BM1362:
         time.sleep(2)
         self.serial_port.baudrate = 3_125_000
         logging.warning(f'{colors.FAIL}Baudrate changed to {self.serial_port.baudrate}{colors.ENDC}')
+        time.sleep(2)
 
         self.clock_manager = ClockManager(self, frequency, chip_counter)
 

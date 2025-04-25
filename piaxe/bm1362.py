@@ -380,6 +380,12 @@ class BM1362:
         # self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [0x00, 0x2c, 0x00, 0x7c, 0x00, 0x03]) #command all chips, write chip address 00, register 2C, data 00 7C 00 03 - Fast UART Configuration
 
         # change baudrate
+        logging.warning(f'{colors.FAIL}Changing baudrate to 3 000 000{colors.ENDC}')
+        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x11, 0x30, 0x00, 0x00, 0x00]) # Got from Matt's cgminer
+        time.sleep(2)
+        self.serial_port.baudrate = 3000000
+        logging.warning(f'{colors.FAIL}Baudrate changed to {self.serial_port.baudrate}{colors.ENDC}')
+
         self.clock_manager = ClockManager(self, frequency, chip_counter)
 
         #do frequency ramp
@@ -396,14 +402,6 @@ class BM1362:
             self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0x3C, 0x80, 0x00, 0x80, 0x08]) #command all chips, write chip address 00, register 3C, data 80 00 80 80 - Core Register Control
             self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [id*2, 0x3C, 0x80, 0x00, 0x82, 0xAA]) #command all chips, write chip address 00, register 3C, data 80 00 82 AA - Core Register Control
             time.sleep(0.500)
-
-
-        # change baud
-        logging.warning(f'{colors.FAIL}Changing baudrate to 3 000 000{colors.ENDC}')
-        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x01, 0x30, 0x00, 0x10, 0x00])
-        time.sleep(2)
-        self.serial_port.baudrate = 3000000
-        logging.warning(f'{colors.FAIL}Baudrate changed to {self.serial_port.baudrate}{colors.ENDC}')
 
         # start mining
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x10, 0x00, 0x00, 0x18, 0x81]) #HCN
@@ -439,10 +437,13 @@ class BM1362:
 
     def set_max_baud(self):
         # Log the setting of max baud (you would need to have a logging mechanism in place)
-        logging.info("Setting max baud of 1000000")
+        logging.info("Setting max baud of 3000000")
 
         # divider of 0 for 3,125,000
-        init8 = [0x55, 0xAA, 0x51, 0x09, 0x00, 0x28, 0x11, 0x30, 0x02, 0x00, 0x03]
+        init8 = [0x55, 0xAA, 0x51, 0x09, 0x00, 0x28, 0x11, 0x30, 0x00, 0x00, 0x00]
+        # 0x11                   0x30                 0x00        0x00
+        # 0001 0 00       1      0 0110      000      00000000    00000000
+        # ???EN? BCLK_SEL _      ? PLL1_DIV4 ?        BT8D        CLKO_DIV
         self.send_simple(init8, 11)
         return 1000000
 

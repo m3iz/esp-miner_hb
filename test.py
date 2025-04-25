@@ -4,7 +4,7 @@ import time
 import serial # type: ignore
 import OPi.GPIO as GPIO
 from orangepi import zero2
-from piaxe.bm1362 import BM1362, CMD_READ, GROUP_ALL, GROUP_SINGLE, TYPE_CMD
+from piaxe.bm1362 import BM1362, CMD_READ, GROUP_ALL, GROUP_SINGLE, TYPE_CMD, CMD_WRITE
 import logging
 import atexit
 from shared import colors
@@ -15,7 +15,7 @@ nrst_pin = 16
 sdn_pin = 12
 
 chip_count = 48
-chip_frequency = 300
+chip_frequency = 400
 
 receive_thread = None
 _read_index = 0
@@ -52,6 +52,13 @@ def _serial_rx_func(size, timeout_ms):
     if debug and bytes_read > 0:
         logging.info(f"{colors.OKGREEN}serial_rx: {bytes_read}{colors.ENDC}")
         logging.info(f"{colors.OKGREEN}<- {data.hex()}{colors.ENDC}")
+
+        try:
+            response_type = (data[-1] >> 5) & 0b111
+            crc = data[-1] & 0b00011111
+            logging.info(f"{colors.OKGREEN}response type: {response_type}, crc: {crc}{colors.ENDC}")
+        except Exception as e:
+            pass
 
     return data if bytes_read > 0 else None
 
@@ -102,7 +109,7 @@ def main():
     GPIO.output(nrst_pin, GPIO.HIGH)
 
     print('Wait for init')
-    time.sleep(3)
+    time.sleep(1)
 
     print('Initing chips')
 
@@ -145,18 +152,50 @@ def main():
     # logging.info('Requesting hash rate ALL')
     # asics.request_hashrate_all()
 
-    logging.info('Requesting hash rate')
-    # for id in range(0, chip_counter):
-    logging.info(f'Request hashrate from chip {8 * 2}')
-    # asics.request_hashrate(8 * 2)
+    # change baudrate
+    # unsigned char baudrate[] = { 0x51, 0x09, 0x00, 0x28, 0x11, 0x30, 0x00, 0x00, 0x00 }; // 3M
+    # asics.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x11, 0x30, 0x00, 0x00, 0x00]) # Got from Matt's cgminer
+
+
     chipAddr = 8 * 2
     asics.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x28])
+
+    # Set PLL1 = 400Mhz
+    asics.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x60, 0x20, 0x80, 0x08, 0x11])
     asics.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x60])
 
-    # logging.info('Requesting nonce offset')
-    # asics.send(TYPE_CMD | GROUP_ALL | CMD_READ, [0x00, 0x0c])
+    time.sleep(2)
 
-    # while True:
+    BT8D = 0x13 # 19
+    BT8D = 0x01 # 1
+    # BT8D = 0x1a # 26
+    logging.warning(f'{colors.FAIL}Setting BT8D {hex(BT8D)}{colors.ENDC}')
+    # asics.send_simple([0x55, 0xAA, 0x51, 0x09, 0x00, 0x28, 0x01, 0x30, BT8D, 0x10, 0x00]) # Got from S19jPro dump
+    # 0x01 0x38 0x1a 0x00
+    # 0x01 0x30 0x00 0x10
+
+    # 0x01 0x20 0x00 0x10
+    asics.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x01, 0x30, BT8D, 0x10])
+    time.sleep(2)
+
+    baud_rates = [
+        115200,
+        781000,
+        1250000,
+        1562000,
+    ]
+
+    for baud_rate in baud_rates:
+        logging.warning(f'{colors.FAIL}Changing baudrate to {baud_rate}{colors.ENDC}')
+        serial_port.baudrate = baud_rate
+        logging.warning(f'{colors.FAIL}Baudrate changed to {serial_port.baudrate}{colors.ENDC}')
+        time.sleep(1)
+
+        logging.info(f'Request 0x28 register value from chipAddr {8 * 2}')
+        chipAddr = 8 * 2
+        asics.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x28])
+        time.sleep(1)
+
     time.sleep(30)
 
     GPIO.output(sdn_pin, GPIO.LOW)

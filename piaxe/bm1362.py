@@ -370,14 +370,6 @@ class BM1362:
 
         # self.send(TYPE_CMD | GROUP_SINGLE | CMD_WRITE, [0x00, 0x2c, 0x00, 0x7c, 0x00, 0x03]) #command all chips, write chip address 00, register 2C, data 00 7C 00 03 - Fast UART Configuration
 
-        # # change baudrate
-        # logging.warning(f'{colors.FAIL}Changing baudrate to 3 125 000{colors.ENDC}')
-        # self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x11, 0x30, 0x00, 0x00, 0x00]) # Got from Matt's cgminer
-        # time.sleep(2)
-        # self.serial_port.baudrate = 3_125_000
-        # logging.warning(f'{colors.FAIL}Baudrate changed to {self.serial_port.baudrate}{colors.ENDC}')
-        # time.sleep(2)
-
         self.clock_manager = ClockManager(self, frequency, chip_counter)
 
         #do frequency ramp
@@ -398,6 +390,16 @@ class BM1362:
         # start mining
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x10, 0x00, 0x00, 0x18, 0x81]) #HCN
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0xA4, 0x90, 0x00, 0xFF, 0xFF]) #enable and set version rolling mask to 0xFFFF
+
+        # # # change baudrate
+        # self.send_simple([0x55, 0xAA, 0x51, 0x09, 0x00, 0x28, 0x01, 0x30, 0x00, 0x10, 0x00])
+        logging.warning(f'{colors.FAIL}Changing baudrate to 1562000{colors.ENDC}')
+        asics.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x01, 0x30, BT8D, 0x10]) # Thanks to Kescha
+        # self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x11, 0x30, 0x00, 0x00, 0x00]) # Got from Matt's cgminer
+        time.sleep(0.1)
+        self.serial_port.baudrate = 1_562_000
+        logging.warning(f'{colors.FAIL}Baudrate changed to {self.serial_port.baudrate}{colors.ENDC}')
+        time.sleep(0.1)
 
         return chip_counter
 
@@ -541,6 +543,9 @@ class BM1368(BM1362):
     def send_init(self, frequency, expected, chips_enabled = None):
         self.clear_serial_buffer()
 
+        # enable and set version rolling mask to 0xFFFF
+        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0xA4, 0x90, 0x00, 0xFF, 0xFF])
+        time.sleep(2)
         # enable and set version rolling mask to 0xFFFF
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0xA4, 0x90, 0x00, 0xFF, 0xFF])
         # enable and set version rolling mask to 0xFFFF again

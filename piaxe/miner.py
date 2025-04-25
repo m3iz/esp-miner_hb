@@ -196,8 +196,8 @@ class BM1366Miner:
         self.temp_thread = threading.Thread(target=self._monitor_hash_rate)
         self.temp_thread.start()
 
-        self.temp_thread = threading.Thread(target=self._monitor_temperature)
-        self.temp_thread.start()
+        # self.temp_thread = threading.Thread(target=self._monitor_temperature)
+        # self.temp_thread.start()
 
         self.receive_thread = threading.Thread(target=self._receive_thread)
         self.receive_thread.start()
@@ -378,7 +378,7 @@ class BM1366Miner:
                     raise RuntimeError("Serial connection broken")
                 total_sent += sent
             if self.debug_bm1366:
-                logging.debug("-> %s", bytearray(data).hex())
+                logging.info(f"{colors.OKBLUE}-> {bytearray(data).hex()}{colors.ENDC}")
 
     def _serial_rx_func(self, size, timeout_ms):
         self.serial_port.timeout = timeout_ms / 1000.0
@@ -387,8 +387,8 @@ class BM1366Miner:
         bytes_read = len(data)
 
         if self.debug_bm1366 and bytes_read > 0:
-            logging.debug("serial_rx: %d", bytes_read)
-            logging.debug("<- %s", data.hex())
+            logging.info(f"{colors.OKGREEN}serial_rx: {bytes_read}{colors.ENDC}")
+            logging.info(f"{colors.OKGREEN}<- {data.hex()}{colors.ENDC}")
 
         return data if bytes_read > 0 else None
 

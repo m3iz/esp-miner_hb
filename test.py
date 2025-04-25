@@ -114,6 +114,8 @@ def main():
         reset_func
     )
 
+    asics.set_serial_port(serial_port)
+
     max_retries = 5  # Maximum number of attempts
 
     # currently the qaxe+ needs this loop :see-no-evil:

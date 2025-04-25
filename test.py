@@ -151,8 +151,8 @@ def main():
     logging.info('Requesting nonce offset')
     asics.send(TYPE_CMD | GROUP_ALL | CMD_READ, [0x00, 0x0c])
 
-    while True:
-        time.sleep(1)
+    # while True:
+    time.sleep(30)
 
     GPIO.output(sdn_pin, GPIO.LOW)
     GPIO.output(nrst_pin, GPIO.LOW)

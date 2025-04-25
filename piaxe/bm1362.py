@@ -394,11 +394,12 @@ class BM1362:
 
         # # # change baudrate
         # self.send_simple([0x55, 0xAA, 0x51, 0x09, 0x00, 0x28, 0x01, 0x30, 0x00, 0x10, 0x00])
-        logging.warning(f'{colors.FAIL}Changing baudrate to 1562000{colors.ENDC}')
-        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x01, 0x30, 0x01, 0x10]) # Thanks to Kescha
+        logging.warning(f'{colors.FAIL}Changing baudrate to 781_000{colors.ENDC}')
+        BT8D = 0x03
+        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x01, 0x30, BT8D, 0x10]) # Thanks to Kescha
         # self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x11, 0x30, 0x00, 0x00, 0x00]) # Got from Matt's cgminer
         time.sleep(0.1)
-        self.serial_port.baudrate = 1_562_000
+        self.serial_port.baudrate = 781_000
         logging.warning(f'{colors.FAIL}Baudrate changed to {self.serial_port.baudrate}{colors.ENDC}')
         time.sleep(0.1)
 

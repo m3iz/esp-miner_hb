@@ -344,6 +344,7 @@ class BM1362:
 
     def send_init(self, frequency, expected, chips_enabled = None):
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0xA4, 0x90, 0x00, 0xFF, 0xFF]) #enable and set version rolling mask to 0xFFFF
+        time.sleep(1)
 
         chip_counter = self.count_asic_chips()
 
@@ -394,7 +395,7 @@ class BM1362:
         # # # change baudrate
         # self.send_simple([0x55, 0xAA, 0x51, 0x09, 0x00, 0x28, 0x01, 0x30, 0x00, 0x10, 0x00])
         logging.warning(f'{colors.FAIL}Changing baudrate to 1562000{colors.ENDC}')
-        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x01, 0x30, BT8D, 0x10]) # Thanks to Kescha
+        self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x01, 0x30, 0x01, 0x10]) # Thanks to Kescha
         # self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x11, 0x30, 0x00, 0x00, 0x00]) # Got from Matt's cgminer
         time.sleep(0.1)
         self.serial_port.baudrate = 1_562_000

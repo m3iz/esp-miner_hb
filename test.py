@@ -76,7 +76,7 @@ def _receive_thread():
     global _buffer, _write_index, _read_index
 
     while True:
-        byte = _serial_rx_func(11, 100)
+        byte = _serial_rx_func(1, 100)
 
         if not byte:
             continue

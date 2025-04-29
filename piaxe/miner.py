@@ -488,6 +488,8 @@ class BM1366Miner:
                     data[i] = self._buffer[self._read_index % 64]
                     self._read_index += 1
 
+                logging.debug(f"Trying package {data}")
+
                 #if self.debug_bm1366:
                 #    logging.debug("<- %s", bytes(data).hex())
 

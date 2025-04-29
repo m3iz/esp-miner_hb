@@ -130,7 +130,7 @@ def main():
         print(f'Counting chips. Attempt {attempt}')
         try:
             chip_counter = asics.init(chip_frequency, chip_count, None)
-            print("Initialization successful.")
+            logging.warning(f"{colors.UNDERLINE}{colors.BOLD}{colors.OKBLUE}Initialization successful. {chip_counter} chips found.{colors.ENDC}")
             break
         except Exception as e:
             logging.error("Attempt %d: Not enough chips found: %s", attempt + 1, e)
@@ -140,59 +140,55 @@ def main():
                 logging.error("Max retries reached. Initialization failed.")
                 raise
 
-    # set dificulty here
+    if False:
+        logging.info(f'Starting receive thread...')
+        receive_thread = threading.Thread(target=_receive_thread)
+        receive_thread.start()
 
-    print(chip_counter)
+        # logging.info('Requesting hash rate ALL')
+        # asics.request_hashrate_all()
 
-
-    logging.info(f'Starting receive thread...')
-    receive_thread = threading.Thread(target=_receive_thread)
-    receive_thread.start()
-
-    # logging.info('Requesting hash rate ALL')
-    # asics.request_hashrate_all()
-
-    # change baudrate
-    # unsigned char baudrate[] = { 0x51, 0x09, 0x00, 0x28, 0x11, 0x30, 0x00, 0x00, 0x00 }; // 3M
-    # asics.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x11, 0x30, 0x00, 0x00, 0x00]) # Got from Matt's cgminer
+        # change baudrate
+        # unsigned char baudrate[] = { 0x51, 0x09, 0x00, 0x28, 0x11, 0x30, 0x00, 0x00, 0x00 }; // 3M
+        # asics.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x11, 0x30, 0x00, 0x00, 0x00]) # Got from Matt's cgminer
 
 
-    chipAddr = 8 * 2
-    asics.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x28])
-
-    # Set PLL1 = 400Mhz
-    asics.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x60, 0x20, 0x80, 0x08, 0x11])
-    asics.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x60])
-
-    time.sleep(2)
-
-    BT8D = 0x03 # 1
-    # BT8D = 0x1a # 26
-    logging.warning(f'{colors.FAIL}Setting BT8D {hex(BT8D)}{colors.ENDC}')
-    # asics.send_simple([0x55, 0xAA, 0x51, 0x09, 0x00, 0x28, 0x01, 0x30, BT8D, 0x10, 0x00]) # Got from S19jPro dump
-    # 0x01 0x38 0x1a 0x00
-    # 0x01 0x30 0x00 0x10
-
-    # 0x01 0x20 0x00 0x10
-    asics.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x01, 0x30, BT8D, 0x10])
-    time.sleep(2)
-
-    baud_rates = [
-        781000,
-    ]
-
-    for baud_rate in baud_rates:
-        logging.warning(f'{colors.FAIL}Changing baudrate to {baud_rate}{colors.ENDC}')
-        serial_port.baudrate = baud_rate
-        logging.warning(f'{colors.FAIL}Baudrate changed to {serial_port.baudrate}{colors.ENDC}')
-        time.sleep(1)
-
-        logging.info(f'Request 0x28 register value from chipAddr {8 * 2}')
         chipAddr = 8 * 2
         asics.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x28])
-        time.sleep(1)
 
-    time.sleep(5)
+        # Set PLL1 = 400Mhz
+        asics.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x60, 0x20, 0x80, 0x08, 0x11])
+        asics.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x60])
+
+        time.sleep(2)
+
+        BT8D = 0x03 # 1
+        # BT8D = 0x1a # 26
+        logging.warning(f'{colors.FAIL}Setting BT8D {hex(BT8D)}{colors.ENDC}')
+        # asics.send_simple([0x55, 0xAA, 0x51, 0x09, 0x00, 0x28, 0x01, 0x30, BT8D, 0x10, 0x00]) # Got from S19jPro dump
+        # 0x01 0x38 0x1a 0x00
+        # 0x01 0x30 0x00 0x10
+
+        # 0x01 0x20 0x00 0x10
+        asics.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x28, 0x01, 0x30, BT8D, 0x10])
+        time.sleep(2)
+
+        baud_rates = [
+            781000,
+        ]
+
+        for baud_rate in baud_rates:
+            logging.warning(f'{colors.FAIL}Changing baudrate to {baud_rate}{colors.ENDC}')
+            serial_port.baudrate = baud_rate
+            logging.warning(f'{colors.FAIL}Baudrate changed to {serial_port.baudrate}{colors.ENDC}')
+            time.sleep(1)
+
+            logging.info(f'Request 0x28 register value from chipAddr {8 * 2}')
+            chipAddr = 8 * 2
+            asics.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x28])
+            time.sleep(1)
+
+        time.sleep(5)
 
     GPIO.output(sdn_pin, GPIO.LOW)
     GPIO.output(nrst_pin, GPIO.LOW)

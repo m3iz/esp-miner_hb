@@ -166,8 +166,7 @@ def main():
 
     time.sleep(2)
 
-    BT8D = 0x13 # 19
-    BT8D = 0x01 # 1
+    BT8D = 0x03 # 1
     # BT8D = 0x1a # 26
     logging.warning(f'{colors.FAIL}Setting BT8D {hex(BT8D)}{colors.ENDC}')
     # asics.send_simple([0x55, 0xAA, 0x51, 0x09, 0x00, 0x28, 0x01, 0x30, BT8D, 0x10, 0x00]) # Got from S19jPro dump
@@ -179,10 +178,7 @@ def main():
     time.sleep(2)
 
     baud_rates = [
-        115200,
         781000,
-        1250000,
-        1562000,
     ]
 
     for baud_rate in baud_rates:
@@ -196,7 +192,7 @@ def main():
         asics.send(TYPE_CMD | GROUP_SINGLE | CMD_READ, [chipAddr, 0x28])
         time.sleep(1)
 
-    time.sleep(30)
+    time.sleep(5)
 
     GPIO.output(sdn_pin, GPIO.LOW)
     GPIO.output(nrst_pin, GPIO.LOW)

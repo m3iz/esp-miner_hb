@@ -473,7 +473,7 @@ class BM1366Miner:
         mask_version = 0x00000000
 
         while not self.stop_event.is_set():
-            byte = self._serial_rx_func(11, 100)
+            byte = self._serial_rx_func(1, 100)
 
             if not byte:
                 continue

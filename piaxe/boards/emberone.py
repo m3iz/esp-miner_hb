@@ -1,7 +1,7 @@
 import logging
 import time
 from smbus2 import SMBus
-
+import OPi.GPIO as GPIO
 
 try:
     import serial # type: ignore

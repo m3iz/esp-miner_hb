@@ -14,7 +14,7 @@ emberone:
   nrst_pin: 15
   sdn_pin: 11
   extranonce2_interval: 1.5
-  serial_port_asic: "/dev/ttyUSB0"
+  serial_port_asic: "/dev/ttyACM0"
   i2c_bus: 4
   i2c_multiplexor_addr: 0x70
   i2c_temperature_sensor_channel: 2

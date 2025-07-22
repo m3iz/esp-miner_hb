@@ -418,7 +418,7 @@ class BM1362:
 
     def init(self, frequency, expected, chips_enabled = None):
         logging.info("Initializing BM1362")
-
+        self.send_simple([0x06])
         self.reset()
 
         return self.send_init(frequency, expected, chips_enabled)

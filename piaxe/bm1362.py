@@ -391,7 +391,7 @@ class BM1362:
         # start mining
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0x10, 0x00, 0x00, 0x18, 0x81]) #HCN
         self.send(TYPE_CMD | GROUP_ALL | CMD_WRITE, [0x00, 0xA4, 0x90, 0x00, 0xFF, 0xFF]) #enable and set version rolling mask to 0xFFFF
-
+        self.send_simple([0x07])
         # # # change baudrate
         # self.send_simple([0x55, 0xAA, 0x51, 0x09, 0x00, 0x28, 0x01, 0x30, 0x00, 0x10, 0x00])
         logging.warning(f'{colors.FAIL}Changing baudrate to 781_000{colors.ENDC}')
